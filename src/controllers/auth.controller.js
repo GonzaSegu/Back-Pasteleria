@@ -25,7 +25,7 @@ const handleLogin = async (req, res, next) => {
         const { email, password } = req.body
         const user = await Auth.verificarCredenciales(email, password)
         const data = {
-            user:user.email, 
+            email:user.email, 
             rol_id: user.rol_id
         }        
         const token = signToken(data)  // se encripta, firma el token
@@ -105,6 +105,12 @@ const handleUpdateUsuario = async (req, res, next) => {
         if (!exists) {
             throw new Error('USER_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
+
+        // ⚠️ Evita que un usuario cliente actualice otro usuario
+        if (req.user.rol_id === 2 && req.user.id !== parseInt(id)) {
+            return res.status(403).json({ error: "No tienes permiso para modificar otro usuario" });
+        }
+        
         const { nombre, apellido, telefono, comuna_id, direccion } = req.body
         const response = await Auth.updateUsuario(id, nombre, apellido, telefono, comuna_id, direccion)
         res.json({
