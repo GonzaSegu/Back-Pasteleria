@@ -28,5 +28,11 @@ module.exports = {
         statusCode: 400,
         message: 'Error en el registro',
         description: 'No se pudo registrar el usuario. Verifica los datos ingresados.',
+    },
+    UPDATE_ERROR: {
+        id: 'updateError',
+        statusCode: 400,
+        message: 'Usuario no actualizado',
+        description: 'No se realizaron cambios en la base de datos',
     }
 }

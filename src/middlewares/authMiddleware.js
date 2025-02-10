@@ -11,7 +11,8 @@ const authMiddleware = async (req, res, next) => {
       const token = Authorization.split("Bearer ")[1];
       const decoded = helpers.verifyToken(token)
   
-      const usuario = await Auth.obtenerUsuario(decoded.email);
+      const usuario = await Auth.obtenerUsuario(decoded.email)
+      ;
       if (!usuario) {
         return res.status(401).json({ error: "Usuario no encontrado" });
       }

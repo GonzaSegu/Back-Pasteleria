@@ -84,29 +84,37 @@ const readUsuario = async (id) => {
     }
 }
 
-const updateUsuario = async (id)  => {
+const updateUsuario = async (id, nombre, apellido, telefono, comuna_id, direccion)  => {
     try {
         const SQLQuery = format(`
             UPDATE usuario 
-            SET nombre = %L, apellido = %L, telefono, comuna_id, direccion = %L  
-            WHERE id = %s RETURNING *`,
-            id
+            SET nombre = %L, apellido = %L, telefono = %L, comuna_id = %L, direccion = %L  
+            WHERE id = %L RETURNING *`,
+            nombre, apellido, telefono, comuna_id, direccion, id
         );
-        const response = pool.query(SQLQuery)   
+        const { rows: [ModUser] } = await pool.query(SQLQuery);   
+        if (!ModUser) {
+            throw new Error("UPDATE_ERROR");
+        }  
+        return ModUser;  
     } catch (error) {
         throw error
     }
 }
 
-const updateAdmin = async (id)  => {
+const updateAdmin = async (id, nombre, apellido, telefono, comuna_id, direccion, rol_id)  => {
     try {
         const SQLQuery = format(`
             UPDATE usuario 
-            SET nombre = %L, apellido = %L, telefono, comuna_id, direccion = %L, rol_id 
-            WHERE id = %s RETURNING *`,
-            id
+            SET nombre = %L, apellido = %L, telefono = %L, comuna_id = %L, direccion = %L, rol_id = %L
+            WHERE id = %L RETURNING *`,
+            nombre, apellido, telefono, comuna_id, direccion, rol_id, id
         );
-        const response = pool.query(SQLQuery)   
+        const { rows: [ModUser] } = await pool.query(SQLQuery);   
+        if (!newUser) {
+            throw new Error("UPDATE_ERROR");
+        }  
+        return ModUser;  
     } catch (error) {
         throw error
     }
@@ -155,4 +163,4 @@ const existsUser = async (id) => {
     }
 }
 
-module.exports = {verificarCredenciales, register, obtenerUsuario, readUsuarios, readUsuario, updateUsuario, deleteUsuario, existsEmail, existsUser}
+module.exports = {verificarCredenciales, register, obtenerUsuario, readUsuarios, readUsuario, updateUsuario, updateAdmin, deleteUsuario, existsEmail, existsUser}
