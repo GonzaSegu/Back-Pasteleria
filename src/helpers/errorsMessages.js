@@ -1,10 +1,4 @@
 module.exports = {
-    PRODUCT_NOT_FOUND: {
-        id: 'productoNoEncontrado',
-        statusCode: 404,
-        message: 'Producto no encontrado',
-        description: 'El producto con el ID asignado no existe en la base de datos',
-    },
     SERVER_ERROR: {
         id: 'serverError',
         statusCode: 500,
@@ -34,5 +28,47 @@ module.exports = {
         statusCode: 400,
         message: 'Usuario no actualizado',
         description: 'No se realizaron cambios en la base de datos',
+    },
+    PRODUCT_NOT_FOUND: {
+        id: 'productoNoEncontrado',
+        statusCode: 404,
+        message: 'Producto no encontrado',
+        description: 'El producto con el ID asignado no existe en la base de datos',
+    },
+    FORMA_NOT_FOUND: {
+        id: 'formaNoEncontrada',
+        statusCode: 404,
+        message: 'Forma no encontrado',
+        description: 'La forma con el ID asignado no existe en la base de datos',
+    },
+    CATEGORIA_NOT_FOUND: {
+        id: 'categoriaNoEncontrada',
+        statusCode: 404,
+        message: 'Categoria no encontrada',
+        description: 'La categoria con el ID asignado no existe en la base de datos',
+    },
+    PORCION_NOT_FOUND: {
+        id: 'porcionNoEncontrada',
+        statusCode: 404,
+        message: 'Porcion no encontrada',
+        description: 'La porcion con el ID asignado no existe en la base de datos',
+    },
+    ROL_NOT_FOUND: {
+        id: 'rolNoEncontrado',
+        statusCode: 404,
+        message: 'Rol no encontrada',
+        description: 'El rol con el ID asignado no existe en la base de datos',
+    },
+    COMUNA_NOT_FOUND: {
+        id: 'comunaNoEncontrada',
+        statusCode: 404,
+        message: 'Comuna no encontrada',
+        description: 'La comuna con el ID asignado no existe en la base de datos',
+    },
+    ESTADO_NOT_FOUND: {
+        id: 'estadoNoEncontrado',
+        statusCode: 404,
+        message: 'Estado no encontrada',
+        description: 'El estado con el ID asignado no existe en la base de datos',
     }
 }

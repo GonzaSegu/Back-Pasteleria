@@ -1,6 +1,6 @@
 const Productos = require('../models/Productos')
 
-const handleCreateProduct = async (req, res) => {
+const handleCreateProduct = async (req, res, next) => {
     try {
         const {nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id, porcion_id} = req.body
         const response = await Productos.createProduct(nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id, porcion_id)
@@ -9,12 +9,12 @@ const handleCreateProduct = async (req, res) => {
             data: response
         })
     } catch (error) {
-        res.status(500).json({error: error.message})
+        next(error);
     }
 }
 
 
-const handleReadProducts = async (req, res) => {
+const handleReadProducts = async (req, res, next) => {
     try {
         const { limit, order_by, page } = req.query
         const response = await Productos.readProducts(limit, order_by, page)
@@ -23,11 +23,11 @@ const handleReadProducts = async (req, res) => {
             data: response
         })
     } catch (error) {
-        res.status(500).json({error: error.message})
+        next(error);
     }
 }
 
-const handleReadProduct = async (req, res) => {
+const handleReadProduct = async (req, res, next) => {
     try {
         const { id } = req.params
         //const authorization = req.header('Authorization')
@@ -40,12 +40,12 @@ const handleReadProduct = async (req, res) => {
             data: response
         })
     } catch (error) {
-        res.status(500).json({error: error.message})
+        next(error);
     }
 }
 
 
-const handleUpdateProduct = async (req, res) => {
+const handleUpdateProduct = async (req, res, next) => {
     try {
         const { id } = req.params
         const {nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id, porcion_id} = req.body
@@ -55,12 +55,12 @@ const handleUpdateProduct = async (req, res) => {
             data: response
         })
     } catch (error) {
-        res.status(500).json({error: error.message})
+        next(error);
     }
 }
 
 
-const handleDeleteProduct = async (req, res) => {
+const handleDeleteProduct = async (req, res, next) => {
     try {
         const { id } = req.params
         const exists = await Productos.existsProduct(id)
@@ -76,7 +76,7 @@ const handleDeleteProduct = async (req, res) => {
             data: response
         })
     } catch (error) {
-        res.status(500).json({error: error.message})
+        next(error);
     }
 }
 

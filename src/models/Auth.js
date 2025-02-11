@@ -64,8 +64,8 @@ const obtenerUsuario = async (email) => {
 const readUsuarios = async () => {
     try {
         const SQLQuery = format('SELECT * FROM usuario')
-        const { rows : users } = await pool.query(SQLQuery)
-        return users
+        const { rows: users , rowCount } = await pool.query(SQLQuery)
+        return { users, rowCount}
     } catch (error) {
         throw error
     }
@@ -92,11 +92,11 @@ const updateUsuario = async (id, nombre, apellido, telefono, comuna_id, direccio
             WHERE id = %L RETURNING *`,
             nombre, apellido, telefono, comuna_id, direccion, id
         );
-        const { rows: [ModUser] } = await pool.query(SQLQuery);   
-        if (!ModUser) {
+        const { rows: [updatedUser] } = await pool.query(SQLQuery);   
+        if (!updatedUser) {
             throw new Error("UPDATE_ERROR");
         }  
-        return ModUser;  
+        return updatedUser;  
     } catch (error) {
         throw error
     }
@@ -110,11 +110,11 @@ const updateAdmin = async (id, nombre, apellido, telefono, comuna_id, direccion,
             WHERE id = %L RETURNING *`,
             nombre, apellido, telefono, comuna_id, direccion, rol_id, id
         );
-        const { rows: [ModUser] } = await pool.query(SQLQuery);   
-        if (!newUser) {
+        const { rows: [updatedUser] } = await pool.query(SQLQuery);   
+        if (!updatedUser) {
             throw new Error("UPDATE_ERROR");
         }  
-        return ModUser;  
+        return updatedUser;  
     } catch (error) {
         throw error
     }

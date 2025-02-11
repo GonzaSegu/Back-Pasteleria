@@ -13,6 +13,6 @@ app.use(express.json())  //parsear solicitudes json a objeto javascript accesibl
 app.use('/api', APIRoutes)    // rutas traídas irán despues de ‘/api/’
 
 // Middleware de manejo de errores (siempre al final)
-app.use(errorMiddleware)    
+app.use(errorMiddleware)
 
 module.exports = app
