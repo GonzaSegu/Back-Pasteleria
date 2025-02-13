@@ -17,7 +17,7 @@ const handleReadComuna = async (req, res, next) => {
         const { id } = req.params
         const exists = await Comunas.existsComuna(id)
         if (!exists) {
-            throw new Error( 'COMUNA_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const response = await Comunas.readComuna(id)
         res.json({
@@ -29,4 +29,4 @@ const handleReadComuna = async (req, res, next) => {
     }
 }
 
-module.exports = {handleReadComunas, handleReadComuna}
+module.exports = { handleReadComunas, handleReadComuna }

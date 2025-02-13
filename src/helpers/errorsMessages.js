@@ -5,11 +5,11 @@ module.exports = {
         message: 'Error interno en el servidor. Prueba más tarde',
         description: 'Error inesperado en el servidor',
     },
-    USER_NOT_FOUND: {
-        id: 'userNotFound',
+    ID_NOT_FOUND: {
+        id: 'idNotFound',
         statusCode: 404,
-        message: 'Usuario no encontrado',
-        description: 'El usuario no existe en el sistema',
+        message: 'Id no encontrado',
+        description: 'El id no existe en el sistema',
     },
     INVALID_CREDENTIALS: {
         id: 'invalidCredentials',
@@ -26,7 +26,7 @@ module.exports = {
     UPDATE_ERROR: {
         id: 'updateError',
         statusCode: 400,
-        message: 'Usuario no actualizado',
+        message: 'Registro no actualizado',
         description: 'No se realizaron cambios en la base de datos',
     },
     PRODUCT_NOT_FOUND: {

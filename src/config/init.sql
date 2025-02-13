@@ -30,7 +30,7 @@ CREATE TABLE Usuario (
     direccion VARCHAR(255), -- Puede ser NULL
     email VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL,
-    rol_id INTEGER NOT NULL REFERENCES Rol(id) ON DELETE RESTRICT,
+    rol_id INTEGER REFERENCES Rol(id) ON DELETE RESTRICT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -63,8 +63,7 @@ CREATE TABLE Producto (
     gluten BOOLEAN DEFAULT TRUE,
     lactosa BOOLEAN DEFAULT TRUE,
     categoria_id INTEGER REFERENCES Categoria(id) ON DELETE RESTRICT,
-    porcion_id INTEGER REFERENCES Porcion(id) ON DELETE RESTRICT,
-    forma_id INTEGER REFERENCES Porcion(id) ON DELETE RESTRICT,
+    forma_id INTEGER REFERENCES Forma(id) ON DELETE RESTRICT,
     activo BOOLEAN DEFAULT TRUE -- Permite desactivar productos sin eliminarlos
 );
 
@@ -76,18 +75,19 @@ CREATE TABLE Estado (
 
 CREATE TABLE Orden (
     id SERIAL PRIMARY KEY,
-    fecha_orden TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_id INTEGER REFERENCES Usuario(id) ON DELETE CASCADE,
     monto_total INTEGER NOT NULL,
-    estado_id INT REFERENCES Estado(id) ON DELETE RESTRICT
+    fecha_orden TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado_id INTEGER REFERENCES Estado(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE Detalle_Orden (
     id SERIAL PRIMARY KEY,
     producto_id INTEGER REFERENCES Producto(id) ON DELETE RESTRICT,
-    orden_id INTEGER REFERENCES Orden(id) ON DELETE CASCADE,
+    orden_id c REFERENCES Orden(id) ON DELETE CASCADE,
+    porcion_id INTEGER REFERENCES Porcion(id) ON DELETE RESTRICT,
     cantidad INTEGER NOT NULL,
-    subtotal INTEGER NOT NULL
+    precio INTEGER NOT NULL
 );
 
 
@@ -97,24 +97,17 @@ INSERT INTO Categoria (nombre_categoria) VALUES ('cat1'), ('cat2');
 INSERT INTO Porcion (nombre_porcion) VALUES ('por1'), ('por2');
 INSERT INTO Forma (nombre_forma) VALUES ('forma1'), ('forma2');
 
-INSERT INTO Producto (nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, categoria_id, porcion_id, forma_id)
+INSERT INTO Producto (nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, categoria_id, forma_id)
 VALUES 
     ('Producto1', 1000, 50, 'url1.jpg', true, true, true, 
         (SELECT id FROM Categoria WHERE nombre_categoria = 'cat1'),
-        (SELECT id FROM Porcion WHERE nombre_porcion = 'por1'),
         (SELECT id FROM Forma WHERE nombre_forma = 'forma1')),
     ('Producto2', 2000, 30, 'url2.jpg', false, false, false,
         (SELECT id FROM Categoria WHERE nombre_categoria = 'cat2'),
-        (SELECT id FROM Porcion WHERE nombre_porcion = 'por2'),
+
         (SELECT id FROM Forma WHERE nombre_forma = 'forma2'));
 
 INSERT INTO Rol (nombre_rol) VALUES ('admin'), ('user');
-
-INSERT INTO Usuario (nombre, apellido, email, password, rol_id)
-VALUES 
-('Admin1', 'Apellido1', 'admin1@example.com', 'hashed_password_1', 1),
-('Admin2', 'Apellido2', 'admin2@example.com', 'hashed_password_2', 1);
-
 
 
 INSERT INTO Region (nombre_region) VALUES
@@ -170,11 +163,14 @@ INSERT INTO Comuna (nombre_comuna, region_id) VALUES
 ('Santiago', 7),
 ('Vitacura', 7);
 
-
+INSERT INTO Usuario (nombre, apellido, email, password, rol_id)
+VALUES 
+('Admin1', 'Apellido1', 'admin1@example.com', 'admin_password_1', 1),
+('Admin2', 'Apellido2', 'admin2@example.com', 'admin_password_2', 1);
 INSERT INTO Usuario (nombre, apellido, telefono, comuna_id, direccion, email, password, rol_id)
 VALUES 
-('User1', 'Apellido3', '987654321', 7,'Calle 123, Ciudad', 'user1@example.com', 'hashed_password_3', 2),
-('User2', 'Apellido4', '912345678', 7,'Avenida 456, Ciudad', 'user2@example.com', 'hashed_password_4', 2);
+('User1', 'Apellido3', '987654321', 7,'Calle 123, Ciudad', 'user1@example.com', 'user_password_1', 2),
+('User2', 'Apellido4', '912345678', 7,'Avenida 456, Ciudad', 'user2@example.com', 'user_password_2', 2);
 
 
 INSERT INTO Estado (nombre_estado) VALUES
@@ -213,8 +209,37 @@ FROM pg_stat_activity
 WHERE pg_stat_activity.datname = 'pasteleria'
 AND pid <> pg_backend_pid();
 
+/*
+
+EN POSTMAN/THUNDER:
+
+CREAR ORDEN: 
+Metodo: POST
+(Necesita Authorization Token (tipo Bearer) obtenido del login)
+Payload- Body :
+{
+  "user_id": 6,
+  "estado_id": 1,
+  "detalle_orden": [
+    {
+      "producto_id": 1,
+      "porcion_id": 1,
+      "cantidad": 1
+    },
+    {
+      "producto_id": 2,
+      "porcion_id": 2,
+      "cantidad": 2
+    }
+  ]
+}
+ACTUALIZAR ORDEN: 
+Metodo: PUT
+(Necesita Authorization Token (tipo Bearer) obtenido del login)
+Metodo: PUT; req.params: se obtiene de http://localhost:3000/api/ordenes/17 ; Payload- Body : {"estado_id":2}
 
 
+OTRAS REGIONES:
 INSERT INTO Comuna (nombre_comuna, region_id) VALUES
 -- Región de Arica y Parinacota (ID: 1)
 ('Arica', 1),
@@ -322,3 +347,13 @@ INSERT INTO Comuna (nombre_comuna, region_id) VALUES
 ('Marchihue', 8),
 ('Navidad', 8),
 ('Paredones', 8),
+
+  
+Codigos para modificar tablas en BBDD:
+ALTER TABLE Producto DROP COLUMN porcion_id;
+ALTER TABLE Detalle_Orden 
+ADD COLUMN porcion_id INTEGER REFERENCES Porcion(id) ON DELETE RESTRICT;
+ALTER TABLE tu_tabla RENAME COLUMN subtotal TO precio;
+
+
+*/

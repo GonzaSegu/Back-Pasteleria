@@ -1,14 +1,14 @@
 const pool = require('../config/db')
 const format = require('pg-format')
 
-const createProduct = async (nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma, categoria_id, porcion_id) => {
+const createProduct = async (nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma, categoria_id) => {
     try {
         const SQLQuery = format(`
             INSERT INTO producto 
-            (nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id, porcion_id) 
+            (nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id) 
             VALUES (%L, %s, %s, %L, %L, %L, %L, %s, %s, %s) 
             RETURNING *`, 
-            nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma, categoria_id, porcion_id)
+            nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma, categoria_id)
         const { rows: [newProduct] } = await pool.query(SQLQuery)
         return newProduct
     
@@ -32,12 +32,10 @@ const readProducts = async (limit = 5, order_by="id_ASC", page = 1) => {   //se 
                 producto.gluten AS gluten,
                 producto.lactosa AS lactosa, 
                 forma.nombre_forma AS nombre_forma,
-                categoria.nombre_categoria AS nombre_categoria,
-                porcion.nombre_porcion AS nombre_porcion
+                categoria.nombre_categoria AS nombre_categoria
             FROM producto
             JOIN forma ON producto.forma_id = forma.id
             JOIN categoria ON producto.categoria_id = categoria.id
-            JOIN porcion ON producto.porcion_id = porcion.id
             ORDER BY %s %s
             LIMIT %s
             OFFSET %s`, 
@@ -65,12 +63,10 @@ const readProduct = async (id) => {
                 producto.gluten AS gluten,
                 producto.lactosa AS lactosa, 
                 forma.nombre_forma AS nombre_forma,
-                categoria.nombre_categoria AS nombre_categoria,
-                porcion.nombre_porcion AS nombre_porcion
+                categoria.nombre_categoria AS nombre_categoria
             FROM producto
             JOIN forma ON producto.forma_id = forma.id
             JOIN categoria ON producto.categoria_id = categoria.id
-            JOIN porcion ON producto.porcion_id = porcion.id
             WHERE producto.id = %L`, 
             id);
         const { rows: [product] } = await pool.query(SQLQuery)
@@ -81,7 +77,7 @@ const readProduct = async (id) => {
     }
 }
 
-const updateProduct = async (id, nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id, porcion_id) => {
+const updateProduct = async (id, nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id) => {
     try {
         const SQLQuery = format(`
             UPDATE producto 
@@ -93,11 +89,10 @@ const updateProduct = async (id, nombre_producto, precio, stock, imagen_url, azu
                 gluten = %L, 
                 lactosa = %L, 
                 forma_id = %s, 
-                categoria_id = %s, 
-                porcion_id = %s 
+                categoria_id = %s
             WHERE id = %s 
             RETURNING *`, 
-            nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id, porcion_id, id)
+            nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id, id)
 
         const { rows: [updatedProduct] } = await pool.query(SQLQuery)
         return updatedProduct

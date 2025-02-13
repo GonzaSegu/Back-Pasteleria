@@ -9,5 +9,6 @@ app.use('/porciones', require('./porciones.routes'))
 app.use('/roles', require('./roles.routes'))
 app.use('/estados', require('./estados.routes'))
 app.use('/comunas', require('./comunas.routes'))
+app.use('/ordenes', require('./ordenes.routes'))
 
 module.exports = app;

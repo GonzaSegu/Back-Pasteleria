@@ -30,7 +30,7 @@ const handleReadCategoria = async (req, res, next) => {
         const { id } = req.params
         const exists = await Categorias.existsCategoria(id)
         if (!exists) {
-            throw new Error( 'CATEGORIA_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const response = await Categorias.readCategoria(id)
         res.json({
@@ -47,7 +47,7 @@ const handleUpdateCategoria = async (req, res, next) => {
         const { id } = req.params
         const exists = await Categorias.existsCategoria(id)
         if (!exists) {
-            throw new Error( 'CATEGORIA_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const { nombre_categoria } = req.body
         const response = await Categorias.updateCategoria(id, nombre_categoria)
@@ -65,7 +65,7 @@ const handleDeleteCategoria = async (req, res, next) => {
         const { id } = req.params
         const exists = await Categorias.existsCategoria(id)
         if (!exists) {
-            throw new Error( 'CATEGORIA_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const response = await Categorias.deleteCategoria(id)
         res.json({
