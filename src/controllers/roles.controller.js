@@ -30,7 +30,7 @@ const handleReadRol = async (req, res, next) => {
         const { id } = req.params
         const exists = await Roles.existsRol(id)
         if (!exists) {
-            throw new Error( 'ROL_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const response = await Roles.readRol(id)
         res.json({
@@ -47,7 +47,7 @@ const handleUpdateRol = async (req, res, next) => {
         const { id } = req.params
         const exists = await Roles.existsRol(id)
         if (!exists) {
-            throw new Error( 'ROL_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const { nombre_rol } = req.body
         const response = await Roles.updateRol(id, nombre_rol)
@@ -65,7 +65,7 @@ const handleDeleteRol = async (req, res, next) => {
         const { id } = req.params
         const exists = await Roles.existsRol(id)
         if (!exists) {
-            throw new Error( 'ROL_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const response = await Roles.deleteRol(id)
         res.json({

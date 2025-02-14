@@ -2,7 +2,7 @@ const { hashPassword, verifyPassword } = require('../helpers/bcrypt')
 const pool = require('../config/db')
 const format = require('pg-format')
 
-const register = async (nombre, apellido, telefono, comuna_id, direccion, email, password, rol_id) => { 
+const register = async (nombre, apellido, telefono, comuna_id, direccion, email, password, rol_id= 2) => { 
     try {
         // Hashear la contraseña de forma síncrona
         const passwordHashed = hashPassword(password);

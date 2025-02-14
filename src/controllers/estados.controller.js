@@ -30,7 +30,7 @@ const handleReadEstado = async (req, res, next) => {
         const { id } = req.params
         const exists = await Estados.existsEstado(id)
         if (!exists) {
-            throw new Error( 'ESTADO_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const response = await Estados.readEstado(id)
         res.json({
@@ -47,7 +47,7 @@ const handleUpdateEstado = async (req, res, next) => {
         const { id } = req.params
         const exists = await Estados.existsEstado(id)
         if (!exists) {
-            throw new Error( 'ESTADO_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const { nombre_estado } = req.body
         const response = await Estados.updateEstado(id, nombre_estado)
@@ -65,7 +65,7 @@ const handleDeleteEstado = async (req, res, next) => {
         const { id } = req.params
         const exists = await Estados.existsEstado(id)
         if (!exists) {
-            throw new Error( 'ESTADO_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const response = await Estados.deleteEstado(id)
         res.json({

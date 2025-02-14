@@ -30,7 +30,7 @@ const handleReadForma = async (req, res, next) => {
         const { id } = req.params
         const exists = await Formas.existsForma(id)
         if (!exists) {
-            throw new Error( 'FORMA_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const response = await Formas.readForma(id)
         res.json({
@@ -47,7 +47,7 @@ const handleUpdateForma = async (req, res, next) => {
         const { id } = req.params
         const exists = await Formas.existsForma(id)
         if (!exists) {
-            throw new Error( 'FORMA_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const { nombre_forma } = req.body
         const response = await Formas.updateForma(id, nombre_forma)
@@ -65,7 +65,7 @@ const handleDeleteForma = async (req, res, next) => {
         const { id } = req.params
         const exists = await Formas.existsForma(id)
         if (!exists) {
-            throw new Error( 'FORMA_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const response = await Formas.deleteForma(id)
         res.json({

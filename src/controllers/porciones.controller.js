@@ -30,7 +30,7 @@ const handleReadPorcion = async (req, res, next) => {
         const { id } = req.params
         const exists = await Porciones.existsPorcion(id)
         if (!exists) {
-            throw new Error( 'PORCION_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const response = await Porciones.readPorcion(id)
         res.json({
@@ -47,7 +47,7 @@ const handleUpdatePorcion = async (req, res, next) => {
         const { id } = req.params
         const exists = await Porciones.existsPorcion(id)
         if (!exists) {
-            throw new Error( 'PORCION_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const { nombre_porcion } = req.body
         const response = await Porciones.updatePorcion(id, nombre_porcion)
@@ -65,7 +65,7 @@ const handleDeletePorcion = async (req, res, next) => {
         const { id } = req.params
         const exists = await Porciones.existsPorcion(id)
         if (!exists) {
-            throw new Error( 'PORCION_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const response = await Porciones.deletePorcion(id)
         res.json({

@@ -68,7 +68,7 @@ const handleReadUsuario = async (req, res, next) => {
         const { id } = req.params
         const exists = await Auth.existsUser(id)
         if (!exists) {
-            throw new Error('USER_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error('ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const response = await Auth.readUsuario(id)
         res.json({
@@ -85,7 +85,7 @@ const handleUpdateAdmin = async (req, res, next) => {
         const { id } = req.params
         const exists = await Auth.existsUser(id)
         if (!exists) {
-            throw new Error('USER_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error('ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const { nombre, apellido, telefono, comuna_id, direccion, rol_id } = req.body
         const response = await Auth.updateAdmin(id, nombre, apellido, telefono, comuna_id, direccion, rol_id)
@@ -103,7 +103,7 @@ const handleUpdateUsuario = async (req, res, next) => {
         const { id } = req.params
         const exists = await Auth.existsUser(id)
         if (!exists) {
-            throw new Error('USER_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error('ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
 
         // ⚠️ Evita que un usuario cliente actualice otro usuario
@@ -127,7 +127,7 @@ const handleDeleteUsuario = async (req, res, next) => {
         const { id } = req.params
         const exists = await Auth.existsUser(id)
         if (!exists) {
-            throw new Error('USER_NOT_FOUND', { cause: 'Error en la base de datos' })
+            throw new Error('ID_NOT_FOUND', { cause: 'Error en la base de datos' })
         }
         const response = await Auth.deleteUsuario(id)
         res.json({
