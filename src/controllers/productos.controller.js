@@ -18,9 +18,14 @@ const handleReadProducts = async (req, res, next) => {
     try {
         const { limit, order_by, page } = req.query
         const response = await Productos.readProducts(limit, order_by, page)
-        res.json({
-            msg: "Lista de productos",
-            data: response
+
+        res.status(200).json({
+            msg: 'Listado de productos',
+            data: {
+                total: response.total,
+                results: response.results,
+                pagination: response.pagination
+            }
         })
     } catch (error) {
         next(error);
@@ -80,4 +85,23 @@ const handleDeleteProduct = async (req, res, next) => {
     }
 }
 
-module.exports = { handleCreateProduct, handleReadProducts, handleReadProduct, handleUpdateProduct, handleDeleteProduct }
+const handleFilterProduct = async (req, res, next) => {
+    try {
+        const { categoria_id, azucar, gluten, lactosa } = req.query
+        const response = await Productos.getProductFilter(categoria_id, azucar, gluten, lactosa);
+        
+        res.status(200).json({
+            msg: 'Listado de productos filtrados',
+            data: {
+                total: response.total,
+                results: response.results,
+                pagination: response.pagination
+            }
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+module.exports = { handleCreateProduct, handleReadProducts, handleReadProduct, handleUpdateProduct, handleDeleteProduct, handleFilterProduct }

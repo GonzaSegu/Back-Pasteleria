@@ -9,6 +9,7 @@ router.post("/", authMiddleware, verifyRole([1]), ProductosController.handleCrea
 
 // 🟢 Cualquier usuario puede ver los productos
 router.get("/", ProductosController.handleReadProducts)        //Read productos
+router.get("/filter", ProductosController.handleFilterProduct)   //Read producto filtrado
 router.get("/:id", ProductosController.handleReadProduct)      //Read producto por id
 
 // 🔒 Solo administradores pueden actualizar o eliminar productos
