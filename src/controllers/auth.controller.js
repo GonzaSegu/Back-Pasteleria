@@ -29,6 +29,7 @@ const handleLogin = async (req, res, next) => {
             rol_id: user.rol_id
         }        
         const token = signToken(data)  // se encripta, firma el token
+        console.log(token)
         res.json({
             msg: "Envio de Token",
             data: token

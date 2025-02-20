@@ -1,4 +1,4 @@
--- Active: 1729696527596@@127.0.0.1@5434@pasteleria
+-- Active: 1729696527596@@127.0.0.1@5434@pasteleria4
 
 -- CREAR DATABASE en TERMINAL e ingresar a ella
 CREATE DATABASE pasteleria WITH ENCODING='UTF8';
@@ -17,7 +17,7 @@ INSERT INTO Region (nombre_region) VALUES
 ('Región de Coquimbo'),
 ('Región de Valparaíso'),
 ('Región Metropolitana de Santiago'),
-('Región del Libertador General Bernardo O’Higgins'),
+('Región del Libertador General Bernardo OHiggins'),
 ('Región del Maule'),
 ('Región de Ñuble'),
 ('Región del Biobío'),
@@ -201,3 +201,43 @@ INSERT INTO Usuario (nombre, apellido, telefono, comuna_id, direccion, email, pa
 VALUES 
 ('User1', 'Apellido3', '987654321', 7,'Calle 123, Ciudad', 'user1@example.com', 'user_password_1', 2),
 ('User2', 'Apellido4', '912345678', 7,'Avenida 456, Ciudad', 'user2@example.com', 'user_password_2', 2);
+
+
+
+/*
+
+-- para eliminar tabla PRODUCTO
+DROP TABLE detalle_orden;
+DROP TABLE producto;
+DROP TABLE categoria;
+DROP TABLE forma;
+DROP TABLE porcion;
+
+
+
+
+Ejemplo de inserción de productos con subquerys:
+INSERT INTO Producto (nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, categoria_id, forma_id)
+VALUES 
+    ('Producto1', 1000, 50, 'url1.jpg', true, true, true, 
+        (SELECT id FROM Categoria WHERE nombre_categoria = 'cat1'),
+        (SELECT id FROM Forma WHERE nombre_forma = 'forma1')),
+    ('Producto2', 2000, 30, 'url2.jpg', false, false, false,
+        (SELECT id FROM Categoria WHERE nombre_categoria = 'cat2'),
+
+        (SELECT id FROM Forma WHERE nombre_forma = 'forma2'));
+
+
+-- Eliminar sesiones de usuario (hacerlo en terminal)
+
+CREATE TABLE Detalle_Orden (
+    id SERIAL PRIMARY KEY,
+    producto_id INTEGER REFERENCES Producto(id) ON DELETE RESTRICT,
+    orden_id INTEGER REFERENCES Orden(id) ON DELETE CASCADE,
+    cantidad INTEGER NOT NULL,
+    precio INTEGER NOT NULL
+);
+
+  
+
+*/
