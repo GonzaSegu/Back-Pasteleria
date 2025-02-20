@@ -8,7 +8,7 @@ module.exports = {
     ID_NOT_FOUND: {
         id: 'idNotFound',
         statusCode: 404,
-        message: 'Id no encontrado',
+        message: 'Id del usuario no encontrado',
         description: 'El id no existe en el sistema',
     },
     INVALID_CREDENTIALS: {
@@ -70,5 +70,11 @@ module.exports = {
         statusCode: 404,
         message: 'Estado no encontrada',
         description: 'El estado con el ID asignado no existe en la base de datos',
-    }
+    },
+    ID_ORDER_ID_FOUND: {
+        id: 'orderIdNotFound',
+        statusCode: 404,
+        message: 'Order_id no encontrado',
+        description: 'El id de la orden no existe en el sistema',
+    },
 }
