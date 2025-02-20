@@ -2,8 +2,8 @@ const Productos = require('../models/Productos')
 
 const handleCreateProduct = async (req, res, next) => {
     try {
-        const {nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id} = req.body
-        const response = await Productos.createProduct(nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id)
+        const {nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id, porcion_id} = req.body
+        const response = await Productos.createProduct(nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id, porcion_id)
         res.json({
             msg: "Producto creado",
             data: response
@@ -12,6 +12,7 @@ const handleCreateProduct = async (req, res, next) => {
         next(error);
     }
 }
+
 
 const handleReadProducts = async (req, res, next) => {
     try {
@@ -34,10 +35,10 @@ const handleReadProducts = async (req, res, next) => {
 const handleReadProduct = async (req, res, next) => {
     try {
         const { id } = req.params
-        const exists = await Productos.existsProduct(id)
-            if (!exists) {
-                throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
-            }
+        //const authorization = req.header('Authorization')
+        //if (!authorization) {
+        //    throw { code: 401, message: "Falta el token de autorización" };
+        //}
         const response = await Productos.readProduct(id)
         res.json({
             msg: "Producto por id",
@@ -48,15 +49,12 @@ const handleReadProduct = async (req, res, next) => {
     }
 }
 
+
 const handleUpdateProduct = async (req, res, next) => {
     try {
         const { id } = req.params
-        const exists = await Productos.existsProduct(id)
-            if (!exists) {
-                throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
-            }
-        const {nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id} = req.body
-        const response = await Productos.updateProduct(id, nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id)
+        const {nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id, porcion_id} = req.body
+        const response = await Productos.updateProduct(id, nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id, porcion_id)
         res.json({
             msg: "Producto actualizado",
             data: response
@@ -66,13 +64,17 @@ const handleUpdateProduct = async (req, res, next) => {
     }
 }
 
+
 const handleDeleteProduct = async (req, res, next) => {
     try {
         const { id } = req.params
         const exists = await Productos.existsProduct(id)
-            if (!exists) {
-                throw new Error( 'ID_NOT_FOUND', { cause: 'Error en la base de datos' })
-            }
+        if (!exists) {
+            throw new Error(
+                'PRODUCT_NOT_FOUND',
+                { cause: 'Error en la base de datos' }
+            )
+        }
         const response = await Productos.deleteProduct(id)
         res.json({
             msg: "Producto eliminado",
