@@ -1,4 +1,4 @@
-const {verificarCredenciales, register, readUsuario, deleteUsuario, existsEmail, existsUser} = require('../../src/models/Auth.js')
+const {verificarCredenciales, register, readUsuario, deleteUsuario, existsEmail, existsUser} = require('../../src/models/Auth')
 const pool = require('../../src/config/db')
 const { verifyPassword, hashPassword } = require('../../src/helpers/bcrypt')
 
@@ -11,7 +11,10 @@ jest.mock('../../src/helpers/bcrypt', () => ({
 // Mock de la configuración de la base de datos
 jest.mock('../../src/config/db'); 
 
-describe('AUTH MODEL TEST', () => {
+describe('AUTH MODEL TESTS', () => {
+    afterEach(() => {
+        jest.clearAllMocks(); // Limpiar mocks después de cada test
+    });
     test('verificarCredenciales - usuario encontrado', async () => {
         const email = 'nombre.apellido@example.cl';
         const password = 'Bla1234';
@@ -44,7 +47,7 @@ describe('AUTH MODEL TEST', () => {
 
         // Comprobando que se lanza el error adecuado
         await expect(verificarCredenciales(email, password)).rejects.toThrow('USER_NOT_FOUND');
-        expect(pool.query).toHaveBeenCalledTimes(2);
+        expect(pool.query).toHaveBeenCalledTimes(1);
     });
 
     test('verificarCredenciales - contraseña incorrecta', async () => {
@@ -64,11 +67,9 @@ describe('AUTH MODEL TEST', () => {
 
         // Comprobamos que se lanza el error adecuado
         await expect(verificarCredenciales(email, password)).rejects.toThrow('INVALID_CREDENTIALS');
-        expect(pool.query).toHaveBeenCalledTimes(3);
+        expect(pool.query).toHaveBeenCalledTimes(1);
     });
-});
 
-describe('REGISTER MODEL TEST', () => {
     test('Debe registrar un nuevo usuario exitosamente', async () => {
         // Datos de prueba
         const nombre = 'Juan';
@@ -105,6 +106,38 @@ describe('REGISTER MODEL TEST', () => {
          // Verifica que el resultado sea el esperado
          expect(result).toEqual(newUserMock);
          expect(hashPassword).toHaveBeenCalledWith(password); // Verifica que se haya llamado con la contraseña correcta
-         expect(pool.query).toHaveBeenCalledTimes(4);
+         expect(pool.query).toHaveBeenCalledTimes(1);
+    });
+
+    test('existsEmail debe devolver true si el email existe', async () => {
+        pool.query.mockResolvedValueOnce({ rowCount: 1 });
+        
+        const result = await existsEmail('test@example.com');
+        
+        expect(result).toBe(true);
+    });
+
+    test('existsEmail debe devolver false si el email no existe', async () => {
+        pool.query.mockResolvedValueOnce({ rowCount: 0 });
+        
+        const result = await existsEmail('notfound@example.com');
+        
+        expect(result).toBe(false);
+    });
+
+    test('existsUser debe devolver true si el usuario existe', async () => {
+        pool.query.mockResolvedValueOnce({ rowCount: 1 });
+        
+        const result = await existsUser(1);
+        
+        expect(result).toBe(true);
+    });
+
+    test('existsUser debe devolver false si el usuario no existe', async () => {
+        pool.query.mockResolvedValueOnce({ rowCount: 0 });
+        
+        const result = await existsUser(999);
+        
+        expect(result).toBe(false);
     });
 });

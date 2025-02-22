@@ -19,7 +19,7 @@ const handleReadProducts = async (req, res, next) => {
         const { limit, order_by, page } = req.query
         const response = await Productos.readProducts(limit, order_by, page)
 
-        res.status(200).json({
+        res.json({
             msg: 'Listado de productos',
             data: {
                 total: response.total,
@@ -90,7 +90,7 @@ const handleFilterProduct = async (req, res, next) => {
         const { categoria_id, azucar, gluten, lactosa } = req.query
         const response = await Productos.getProductFilter(categoria_id, azucar, gluten, lactosa);
         
-        res.status(200).json({
+        res.json({
             msg: 'Listado de productos filtrados',
             data: {
                 total: response.total,

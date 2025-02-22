@@ -7,7 +7,7 @@ const pool = new Pool({   //crea var para guardar instancia de la DB creada
     user: DB_USER,
     password: DB_PASSWORD,
     database: DB_NAME,
-    // port: DB_PORT,
+    port: DB_PORT,
     allowExitOnIdle: true //en los tiempos muertos, cierra la conexión
 })
 

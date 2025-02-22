@@ -84,6 +84,7 @@ const readProduct = async (id) => {
             FROM producto
             JOIN forma ON producto.forma_id = forma.id
             JOIN categoria ON producto.categoria_id = categoria.id
+            JOIN porcion ON producto.porcion_id = porcion.id
             WHERE producto.id = %L`, 
             id);
         const { rows } = await pool.query(SQLQuery)
@@ -117,7 +118,7 @@ const updateProduct = async (id, nombre_producto, precio, stock, imagen_url, azu
                 porcion_id = %s 
             WHERE id = %s 
             RETURNING *`, 
-            nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id, id)
+            nombre_producto, precio, stock, imagen_url, azucar, gluten, lactosa, forma_id, categoria_id, porcion_id, id)
 
         const { rows: [updatedProduct] } = await pool.query(SQLQuery)
         return updatedProduct
@@ -149,4 +150,89 @@ const existsProduct = async (id) => {
     }
 }
 
-module.exports = {createProduct, readProducts, readProduct, updateProduct, deleteProduct, existsProduct}
+const getProductFilter = async (categoria_id, azucar, gluten, lactosa, limit = 5, page = 1) => {
+    try {
+        const { query, queryCount } = auxfilterProduct(categoria_id, azucar, gluten, lactosa);
+
+        // Calcular el offset para la paginación
+        const offset = Math.abs((page - 1) * limit);
+
+        // Modificar la consulta para incluir LIMIT y OFFSET
+        const paginatedQuery = `${query} LIMIT ${limit} OFFSET ${offset}`;
+
+        // Consultar productos con los filtros y paginación
+        const { rows } = await pool.query(paginatedQuery);
+
+        const { rows: countRows } = await pool.query(queryCount);
+        const total = countRows[0].count;
+
+        // Calcular el número de páginas
+        const totalPages = Math.ceil(total / limit);
+        const currentPage = Math.min(Number(page), totalPages);
+
+        // Estructura de paginación
+        const pagination = {
+            current_page: currentPage,
+            total_pages: totalPages,
+            next_page: currentPage < totalPages ? currentPage + 1 : null,
+            prev_page: currentPage > 1 ? currentPage - 1 : null,
+        };
+
+        return {
+            total: total,
+            results: rows,
+            pagination,
+        }
+
+    } catch (error) {
+        throw error
+    }
+}
+
+const auxfilterProduct = (categoria_id = '', azucar = '', gluten = '', lactosa = '') => {
+    let filtros = [];
+    if (categoria_id) filtros.push(`categoria_id = '${categoria_id}'`)
+    if (azucar) filtros.push(`azucar = '${azucar}'`)
+    if (gluten) filtros.push(`gluten = '${gluten}'`)
+    if (lactosa) filtros.push(`lactosa = '${lactosa}'`)
+
+    let query = format(`
+        SELECT 
+            producto.id, 
+            producto.nombre_producto AS nombre_producto, 
+            producto.precio AS precio,
+            producto.stock AS stock,
+            producto.imagen_url AS imagen_url,
+            producto.azucar AS azucar,
+            producto.gluten AS gluten,
+            producto.lactosa AS lactosa, 
+            forma.nombre_forma AS nombre_forma,
+            categoria.nombre_categoria AS nombre_categoria,
+            porcion.nombre_porcion AS nombre_porcion
+        FROM producto
+        JOIN forma ON producto.forma_id = forma.id
+        JOIN categoria ON producto.categoria_id = categoria.id
+        JOIN porcion ON producto.porcion_id = porcion.id`);
+
+
+    if (filtros.length > 0) {
+        query += ` WHERE ${filtros.join(" AND ")}`;
+    }
+
+    let queryCount = `
+    SELECT COUNT(*) AS count 
+    FROM producto p
+    LEFT JOIN Categoria c ON p.categoria_id = c.id
+`;
+
+    if (filtros.length > 0) {
+        queryCount += ` WHERE ${filtros.join(" AND ")}`;
+    }
+
+    return {
+        query,
+        queryCount
+    };
+}
+
+module.exports = { createProduct, readProducts, readProduct, updateProduct, deleteProduct, existsProduct, getProductFilter }
